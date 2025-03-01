@@ -1,0 +1,42 @@
+<% layout ("layouts/boilerplatecode.ejs") -%>
+<body>
+    <form method="post" action ="/listings/ <%= listing._id %>?_method=put"></form>
+    <h1>Edit your listing</h1>
+    <form action="/listings" method="post">
+
+      <div class="mb-3">
+        <label for="tietle" class="form-label">Tittle</label>
+        <input type="text" class="form-control" value="<%= listing.title %>" name="listing[title]" placeholder="title">
+    </div>
+        <br>
+        <!-- <div class="mb-3">
+                <label for="description" class="form-label">description</label>
+
+                <input type="text" name="listing[description]" class="description form-control" >
+            </div> -->
+
+        <br>
+        <div>
+            <label for="description" class="form-label">Description</label>
+            <input class="form-control" type="text" value="<%= listing.description %>" name="listing[description]" placeholder="description">
+        </div>
+        <br>
+        <div class="row">
+        <div class="mb-3 col-md-4">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" class="form-control" value= "<%= listing.price %>" name="listing[price]" placeholder="price">
+        </div>
+        <div class="mb-3 col-md-8">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" value="<%= listing.location %>" name="listing[location]" placeholder="location">
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <div> <label for="countyu" class="form-label">Country</label>
+            <input type="text" class="form-control" value="<%= listing.country %>" name="listing[country]" placeholder="country"></div>
+        <br>
+        <br>
+        <button type="edit" class="btn btn-dark add-btn" >Edit</button>
+    </form>
