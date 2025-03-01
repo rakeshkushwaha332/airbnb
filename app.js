@@ -6,6 +6,8 @@ const path = require("path");
 const methodOverride = require("method-override");
 const MONGO_URL = "mongodb://localhost:27017/wonderlust";
 const ejsMate = require("ejs-mate");
+const session = require ("express-session")
+const flash = require("connect-flash")
 
 main()
 .then(() => {
@@ -28,6 +30,23 @@ app.engine("ejs", ejsMate);
 
 app.use(express.static('public'));
 app.use(express.static(__dirname + '/public/css/'));
+
+
+
+const sessionOptions ={
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitalized : true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
+
+
+}
+app.use (session(sessionOptions));
+app.use(flash());
 
 app.get("/", (req, res) => {
     res.send("hii i am root ");
