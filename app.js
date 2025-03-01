@@ -6,9 +6,13 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
-const listingRoutes = require("./routes/listing"); // Import the listings router
-const { console } = require("inspector");
+const passport = require("passport");
+const LocalStratergey = require("passport-local");
 
+const User = require("./models/user.js");
+const userRouter = require("./routes/user.js");
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
 
 const MONGO_URL = "mongodb://localhost:27017/wonderlust";
 
@@ -23,19 +27,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
-app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 app.use(express.static(__dirname + '/public/css/'));
-app.use((req, res, next) => {
-    console.log(`Incoming request: ${req.method} ${req.url}`);
-    next();
-});
-
-// app.use((err, req, res, next) => {
-//     res.status(500).send("Something went wrong");
-// });
-
 
 const sessionOptions = {
     secret: "mysupersecretcode",
@@ -48,25 +42,34 @@ const sessionOptions = {
     }
 };
 
-
 app.use(session(sessionOptions));
 app.use(flash());
 
+// Passport setup
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStratergey(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-// flash message 
-app.use((req,res,next) => {
+// Flash middleware
+app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    console.log(res.locals.success)
+    console.log("Success Flash:", res.locals.success); // Debugging
+    console.log("Error Flash:", res.locals.error); // Debugging
     next();
 });
+
+// Routes
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
+
 // Home route
 app.get("/", (req, res) => {
     res.send("Hi, I am root");
 });
-
-// Use listings routes
-app.use("/listings", listingRoutes);
 
 app.listen(8080, () => {
     console.log("Server started on port 8080");
