@@ -9,6 +9,7 @@ const flash = require("connect-flash");
 const listingRoutes = require("./routes/listing"); // Import the listings router
 const { console } = require("inspector");
 
+
 const MONGO_URL = "mongodb://localhost:27017/wonderlust";
 
 main().then(() => console.log("Database connected")).catch((err) => console.log(err));
@@ -22,14 +23,24 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 app.use(express.static(__dirname + '/public/css/'));
+app.use((req, res, next) => {
+    console.log(`Incoming request: ${req.method} ${req.url}`);
+    next();
+});
+
+// app.use((err, req, res, next) => {
+//     res.status(500).send("Something went wrong");
+// });
+
 
 const sessionOptions = {
     secret: "mysupersecretcode",
     resave: false,
-    saveUninitalized: true,
+    saveUninitialized: true,  
     cookie: {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,

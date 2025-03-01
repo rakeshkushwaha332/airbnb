@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listing.js"); // Adjust path for correct model import
-
+const Review = require("../models/reviews");
+// const {listingSchema} = require("./schema.js")
 // Index route
 router.get("/", async (req, res) => {
     const allListings = await Listing.find({});
@@ -25,11 +26,15 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create route
-router.post("/", async (req, res) => {
-    const listing = new Listing(req.body.listing);
+router.post("/", async (req, res, next ) => {
+    try{
+        const listing = new Listing(req.body.listing);
     await listing.save();
     req.flash("success","New Listing Created!")
     res.redirect(`/listings`);
+    } catch(err){
+        next(err);
+    }
 });
 
 // Edit route
@@ -52,6 +57,28 @@ router.delete("/:id", async (req, res) => {
     req.flash("success"," Listing Deleted!")
     res.redirect("/listings");
 });
+
+
+// review route
+// post route
+router.post("/:id/reviews", async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+
+    listing.reviews.push(newReview._id);
+    await listing.save();
+await newReview.save();
+console.log("new review saved");
+
+res.redirect(`/listings/${listing.id}`);   // Correct - Only one response
+
+});
+// 
+
+
+
+
+
 
 // Test listing route (optional - you can remove it if not needed)
 router.get("/testlisting", async (req, res) => {

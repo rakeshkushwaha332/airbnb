@@ -5,41 +5,9 @@
 
 
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-8 offset-2">
-
-
-
-
-
-
-
-
-<body>
-
-    <h3>Listing details :</h3>
-    <div class="card col-6 offset-2">
-
-</div>
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top show-img" src="<%= listing.image.url %>" alt="Card image cap">
-            <div class="card-body">
-              <p class="card-text">
-                <B> <%= listing.title %></B>
-
-            <br>
-             <%= listing.description %>
-            <br>
-            &#x20B9;<%= listing.price.toLocaleString("en-IN") %>
-            <br>
-             <%= listing.location %>
-            <br>
-           <%= listing.country %>
-
-                </p>
-            </div>
-          </div>
+        <div class="col-8 offset-2">
 
 
 
@@ -48,25 +16,69 @@
 
 
 
+            <body>
+
+                <h3> <B>
+                        <%= listing.title %>
+                    </B></h3>
+                <div class="card col-6 offset-2">
+
+                </div>
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top show-img" src="<%= listing.image.url %>" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="card-text">
+
+
+                            <br>
+                            <%= listing.description %>
+                                <br>
+                                &#x20B9;<%= listing.price.toLocaleString("en-IN") %>
+                                    <br>
+                                    <%= listing.location %>
+                                        <br>
+                                        <%= listing.country %>
+
+                        </p>
+                    </div>
+                </div>
 
 
 
 
+        </div>
+        <ul>
 
+        </ul>
+
+        <a class="btn btn-dark" href="/listings/<%= listing._id %>/edit">Edit listing</a>
+        <br><br>
+
+        <form action="/listings/<%= listing._id %>?_method=delete" method="post">
+            <button class="btn btn-dark add-btn" type="submit">Delete this listing</button>
+        </form>
 
 
 
     </div>
-    <ul>
- 
-    </ul>
+   
 
-    <a class="btn btn-dark" href="/listings/<%= listing._id %>/edit">Edit listing</a>
-    <br><br>
+    <div class="col-8 offset-3 mb-3">
 
-    <form action="/listings/<%= listing._id %>?_method=delete" method="post">
-        <button   class="btn btn-dark add-btn" type="submit">Delete this listing</button>
-    </form>
-
-
-</div>
+        <div>
+            <hr>
+            <h4>Leave A Review</h4>
+            <form action="/listings/<%= listing.id %>/reviews" method="post" novalidate class="needs-validation">
+                <div class="mb-3 mt-3">
+                    <label for="rating" class="form-label">rating</label>
+                    <input type="range" class="form-range"   min="1" max="5" id="rating" name="review[rating]">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="comment" class="form-label">Comments</label>
+                    <textarea name="review[comment]" id="comment" class="form-control" required cols="30" rows="5"></textarea>
+                    <div class="invalid-feedback">Please submit some comments for review</div>
+                </div>
+                <button class="btn btn-outline-dark">Submit</button>
+            </form>
+        </div>
+    </div>
