@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listing.js"); // Adjust path for correct model import
 const Review = require("../models/reviews");
+const {isLoggedIn} = require("../middleware.js");
+
 // const {listingSchema} = require("./schema.js")
 // Index route
 router.get("/", async (req, res) => {
@@ -11,7 +13,9 @@ router.get("/", async (req, res) => {
 });
 
 // New route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+   
+    
     res.render("listings/new.ejs");
 });
 
@@ -26,7 +30,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create route
-router.post("/", async (req, res, next ) => {
+router.post("/",isLoggedIn, async (req, res, next ) => {
     try{
         const listing = new Listing(req.body.listing);
     await listing.save();
@@ -38,21 +42,21 @@ router.post("/", async (req, res, next ) => {
 });
 
 // Edit route
-router.get("/:id/edit", async (req, res) => {
+router.get("/:id/edit",isLoggedIn, async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     req.flash("success","Listing Edited!")
     res.render("listings/edit.ejs", { listing });
 });
 
 // Update route
-router.put("/:id", async (req, res) => {
+router.put("/:id",isLoggedIn, async (req, res) => {
     await Listing.findByIdAndUpdate(req.params.id, req.body.listing);
     req.flash("success"," Listing Updated!")
     res.redirect(`/listings/${req.params.id}`);
 });
 
 // Delete route
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",isLoggedIn, async (req, res) => {
     await Listing.findByIdAndDelete(req.params.id);
     req.flash("success"," Listing Deleted!")
     res.redirect("/listings");
@@ -61,7 +65,7 @@ router.delete("/:id", async (req, res) => {
 
 // review route
 // post route
-router.post("/:id/reviews", async (req, res) => {
+router.post("/:id/reviews",isLoggedIn, async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
 
