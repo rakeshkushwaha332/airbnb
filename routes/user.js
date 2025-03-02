@@ -12,12 +12,11 @@ const wrapAsync = (fn) => {
     };
 };
 
+router.route("/signup")
+.get( userController.renderSignupForm)
+.post( wrapAsync(userController.signup));
 
-// Render the signup form
-router.get("/signup", userController.renderSignupForm);
 
-// Handle the signup form submission
-router.post("/signup", wrapAsync(userController.signup));
 
 //     // Log the username, salt, and hashed password
 //     console.log("Username:", registeredUser.username);
@@ -26,10 +25,9 @@ router.post("/signup", wrapAsync(userController.signup));
 // }));
 
 // Render the login form
-router.get("/login", saveRedirectUrl, wrapAsync(userController.renderLoginForm));
-
-// Handle the login form submission
-router.post("/login",saveRedirectUrl, passport.authenticate("local", {
+router.route("/login")
+.get(saveRedirectUrl, wrapAsync(userController.renderLoginForm))
+.post(saveRedirectUrl, passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
 }), userController.login);
