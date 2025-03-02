@@ -58,6 +58,8 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     console.log("Success Flash:", res.locals.success); // Debugging
     console.log("Error Flash:", res.locals.error); // Debugging
+    res.locals.currUser = req.user;
+    
     next();
 });
 

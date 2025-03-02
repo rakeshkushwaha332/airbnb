@@ -16,6 +16,12 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,  // ✅ Use Date.now (without parentheses)
     },
+    author: {
+        type:  Schema.Types.ObjectId,
+        ref: "User",
+        
+
+    }
     
 });
 
