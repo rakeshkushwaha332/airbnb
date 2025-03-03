@@ -1,8 +1,8 @@
 <% layout ("layouts/boilerplatecode.ejs") -%>
 <body>
-    <form method="post" action ="/listings/ <%= listing._id %>?_method=put" ></form>
+    <form method="post" nctype="multipart/form-data" action ="/listings/ <%= listing._id %>?_method=put" ></form>
     <h1>Edit your listing</h1>
-    <form action="/listings" method="post" novalidate class="needs-validation">
+    <form action="/listings" method="post" enctype="multipart/form-data" novalidate class="needs-validation">
 
       <div class="mb-3">
         <label for="tietle" class="form-label">Tittle</label>
@@ -10,11 +10,7 @@
         <div class="valid-feedback">Tittle looks good</div>
     </div>
         <br>
-        <!-- <div class="mb-3">
-                <label for="description" class="form-label">description</label>
-
-                <input type="text" name="listing[description]" class="description form-control" >
-            </div> -->
+       
 
         <br>
         <div>
@@ -22,10 +18,15 @@
             <input class="form-control" required type="text" value="<%= listing.description %>" name="listing[description]" placeholder="description">
             <div class="invalid-feedback">Write short descreption</div>
         </div>
-
+       
         <div class="mb-3">
-            <label for="image" class="form-label">Image Link</label>
-            <input name="listing[image]" required value="<%= listing.image %>" type="text" placeholder="Enter the image URL/link" class="form-control">
+          <div class="mb-3">
+            Orignal listings Image <br>
+            <img src="<%= orignalImageUrl %>" />
+  
+          </div>
+            <label for="image" class="form-label"> Upload New Image Link</label>
+            <input name="listing[image]"  type="file" class="form-control">
         </div>
         
         

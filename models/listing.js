@@ -128,9 +128,22 @@ const listingSchema = new Schema({
         {type: Schema.Types.ObjectId,
             ref: "User",
         },
-
+        geometry: {
+            type: {
+                type: String, // GeoJSON type (e.g., "Point")
+                enum: ["Point"], // Only "Point" is supported for now
+                required: true,
+            },
+            coordinates: {
+                type: [Number], // Array of numbers for longitude and latitude
+                required: true,
+            },
+        },
+        
+        }
     
-});
+    
+);
 
 const Listing = mongoose.model('Listing', listingSchema);
 

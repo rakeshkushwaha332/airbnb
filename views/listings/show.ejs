@@ -1,4 +1,8 @@
 <% layout("layouts/boilerplatecode.ejs") -%>
+<script>
+    const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+</script>
+
 
 <div class="row">
     <div class="col-8 offset-2">
@@ -32,21 +36,15 @@
 <% if (currUser) { %>
     <!-- Reviews Section -->
     <div class="col-8 offset-3 mb-3">
-        
         <div>
             <hr>
             <h4>Leave A Review</h4>
             <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
-              
-
-                </div>
                 <div class="mb-3 mt-3">
                     <!-- <label for="rating" class="form-label">Rating</label> -->
                 </div>
-            
 
                 <fieldset class="starability-slot">
-                    
                     <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
                     <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                     <label for="first-rate1" title="Terrible">1 star</label>
@@ -58,8 +56,7 @@
                     <label for="first-rate4" title="Very good">4 stars</label>
                     <input type="radio" id="first-rate5" name="review[rating]" value="5" />
                     <label for="first-rate5" title="Amazing">5 stars</label>
-                  </fieldset>
-                  </div>
+                </fieldset>
                 <div class="mb-3 mt-3">
                     <label for="comment" class="form-label">Comments</label>
                     <textarea name="review[comment]" id="comment" class="form-control" required cols="30" rows="5"></textarea>
@@ -72,26 +69,53 @@
 <% } %>
 
 <hr />
-<p><b>All Reviews</b></p>
-<div class="row">
-    <% for (let review of listing.reviews) { %>
-        <div class="card col-5 ms-3 mb-3">
-            <div class="card-body">
-                <!-- Add conditional check for review.author -->
-                <% if (review.author) { %>
-                    <h5><%= review.author.username %></h5>
-                <% } else { %>
-                    <h5>Anonymous</h5>
-                <% } %>
-                <p class="starability-result card-text" data-rating="<%= review.rating %>">
-                
-                </p>
-                <p class="card-text"><%= review.comment %></p>
-                
-                <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                    <button class="btn btn-sm btn-dark">DELETE</button>
-                </form>
+<% if (listing.reviews.length > 0) { %>
+    <div class="row">
+        <p><b>All Reviews</b></p>
+        <% for (let review of listing.reviews) { %>
+            <div class="card col-5 ms-3 mb-3">
+                <div class="card-body">
+                    <!-- Add conditional check for review.author -->
+                    <% if (review.author) { %>
+                        <h5><%= review.author.username %></h5>
+                    <% } else { %>
+                        <h5>Anonymous</h5>
+                    <% } %>
+                    <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                    <p class="card-text"><%= review.comment %></p>
+                    <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-dark">DELETE</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    <% } %>
+        <% } %>
+    </div>
+<% } %>
+
+<div class="col-8 offset-3 mb-3">
+    <h3>Where you will be</h3>
+    <div id="map"></div>
 </div>
+
+<script>
+    let mapToken = "<%= process.env.MAP_TOKEN %>"
+    console.log(mapToken);
+    // Set Mapbox access token
+    mapboxgl.accessToken = "<%= process.env.MAP_TOKEN %>";
+
+    // Parse the listing's location coordinates (assuming listing.location is a string like "lng,lat")
+    // const coordinates = "<%= listing.location %>".split(',').map(Number);
+
+    // Initialize the map
+    const map = new mapboxgl.Map({
+    container: 'map',
+    center: {lng: 77.5946, lat: 12.9716},  // ✅ Pass valid coordinates.
+    zoom: 12
+});
+
+
+    // Add a marker for the listing's location
+    new mapboxgl.Marker()
+        .setLngLat(coordinates)
+        .addTo(map);
+</script>

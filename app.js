@@ -72,9 +72,9 @@ app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
 // Home route
-app.get("/", (req, res) => {
-    res.send("Hi, I am root");
-});
+// app.get("/", (req, res) => {
+//     res.send("Hi, I am root");
+// });
 
 app.listen(8080, () => {
     console.log("Server started on port 8080");
